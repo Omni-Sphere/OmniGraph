@@ -1,0 +1,283 @@
+#Entities types
+type Item {
+    Entry: Int!
+    Code: String!
+    Name: String!
+    Description: String
+    Image: String
+    IsActive: Boolean!
+    PurchaseItem: Boolean!
+    SellItem: Boolean!
+    InventoryItem: Boolean!
+    Price: Float!
+    OnHand: Float!
+    OnOrder: Float!
+    OnRequest: Float!
+    MinStock: Float!
+    MaxStock: Float!
+    MinOrder: Float!
+    MaxOrder: Float!
+    MinRequest: Float!
+    MaxRequest: Float!
+    LastUpdatedBy: User
+    CreatedBy: User!
+    CreateDate: String!
+    UpdateDate: String
+}
+
+type Warehouse {
+    WarehouseEntry: Int!
+    Code: String!
+    Name: String!
+    IsLocked: Boolean!
+    CreateDate: String!
+    UpdateDate: String
+}
+
+type User {
+    Entry: Int!
+    Code: String!
+    Name: String!
+    IsLocked: Boolean!
+    Email: String
+    Phone: String
+    #Employee: Employee
+    ChangePasswordNextLogin: Boolean!
+    PasswordNeverExpires: Boolean!
+    CreatedBy: User!
+    LastUpdatedBy: User
+    CreateDate: String!
+    UpdateDate: String
+}
+
+#Entities inputs
+input CreateItemInput {
+    Code: String!
+    Name: String!
+    Description: String
+    Image: String
+    IsActive: Boolean
+    PurchaseItem: Boolean
+    SellItem: Boolean
+    InventoryItem: Boolean
+    Price: Float
+    OnHand: Float
+    OnOrder: Float
+    OnRequest: Float
+    MinStock: Float
+    MaxStock: Float
+    MinOrder: Float
+    MaxOrder: Float
+    MinRequest: Float
+    MaxRequest: Float
+    LastUpdatedBy: Int
+    CreatedBy: Int!
+    CreateDate: String!
+}
+
+input UpdateItemInput {
+    Entry: Int!
+    Code: String!
+    Name: String!
+    Description: String
+    Image: String
+    IsActive: Boolean
+    PurchaseItem: Boolean
+    SellItem: Boolean
+    InventoryItem: Boolean
+    Price: Float
+    OnHand: Float
+    OnOrder: Float
+    OnRequest: Float
+    MinStock: Float
+    MaxStock: Float
+    MinOrder: Float
+    MaxOrder: Float
+    MinRequest: Float
+    MaxRequest: Float
+    LastUpdatedBy: Int
+    UpdateDate: String
+}
+
+input GetItemInput {
+    Entry: Int
+    Code: String
+    Name: String
+}
+
+input SearchItemsInput {
+    #AND: [SearchItemsInput]
+    #OR: [SearchItemsInput]
+    CodeEqualsTo: String
+    CodeContains: String
+    NameEqualsTo: String
+    NameContains: String
+    DescriptionEqualsTo: String
+    DescriptionContains: String
+    IsActive: Boolean
+    PurchaseItem: Boolean
+    SellItem: Boolean
+    InventoryItem: Boolean
+    Price: Float
+    OnHandEqualsTo: Float
+    OnHandGreaterThan: Float
+    OnHandLessThan: Float
+    OnRequestEqualsTo: Float
+    OnRequestGreaterThan: Float
+    OnRequestLessThan: Float
+    OnOrderEqualsTo: Float
+    OnOrderGreaterThan: Float
+    OnOrderLessThan: Float
+    MinStockEqualsTo: Float
+    MinStockGreaterThan: Float
+    MinStockLessThan: Float
+    MaxStockEqualsTo: Float
+    MaxStockGreaterThan: Float
+    MaxStockLessThan: Float
+    MinOrderEqualsTo: Float
+    MinOrderGreaterThan: Float
+    MinOrderLessThan: Float
+    MaxOrderEqualsTo: Float
+    MaxOrderGreaterThan: Float
+    MaxOrderLessThan: Float
+    MinRequestEqualsTo: Float
+    MinRequestGreaterThan: Float
+    MinRequestLessThan: Float
+    MaxReqeuestEqualsTo: Float
+    MaxRequestGreaterThan: Float
+    MaxRequestLessThan: Float
+}
+
+input CreateWarehouseInput {
+    Code: String!
+    Name: String!
+    IsLocked: Boolean
+    CreateDate: String!
+}
+
+input UpdateWarehouseInput {
+    Entry: Int!
+    Code: Int!
+    Name: String
+    IsLocked: Boolean
+    UpdateDate: String!
+    UpdatedBy: Int
+}
+
+input GetWarehouseInput {
+    Entry: Int
+    Code: String
+    Name: String
+}
+
+input SearchWarehousesInput {
+    AND: [SearchWarehousesInput]
+    OR: [SearchWarehousesInput]
+    CodeEqualsTo: String
+    CodeContains: String
+    NameEqualsTo: String
+    NameContains: String
+    IsLocked: String
+}
+
+input CreateUserInput {
+    Code: String!
+    Name: String!
+    Email: String
+    Phone: String
+    #Employee: Employee
+    Password: String!
+    SuperUser: Boolean
+    ChangePasswordNextLogin: Boolean
+    PasswordNeverExpires: Boolean
+    CreatedBy: Int
+}
+
+input UpdateUserInput {
+    Entry: Int!
+    Code: String!
+    Name: String
+    Email: String
+    Phone: String
+    #Employee: Employee
+    Password: String!
+    SuperUser: Boolean
+    ChangePasswordNextLogin: Boolean
+    PasswordNeverExpires: Boolean
+    UpdatedBy: Int
+}
+
+input GetUserInput {
+    Entry: Int
+    Code: String
+    Name: String
+    Phone: String
+    #Employee: Employee
+}
+
+input SearchUsersInput {
+    AND: [SearchUsersInput]
+    OR: [SearchUsersInput]
+    SuperUsers: Boolean
+    CodeEqualsTo: String
+    CodeContains: String
+    NameEqualsTo: String
+    NameConatins: String
+    EmailEqualsTo: String
+    EmailContains: String
+    PhoneEqualsTo: Int
+    PhoneContaind: Int
+    IsEmployee: Boolean
+    IsSuperUser: Boolean
+    DaysToPasswordExpiration: Int
+}
+
+#Queries
+type ItemQuery {
+    GetItem(Item: GetItemInput!): Item!
+    SearchItems(Filter: SearchItemsInput!): [Item!]!
+}
+
+type WarehouseQuery {
+    GetWarehouse(Warehouse: GetWarehouseInput!): Warehouse!
+    SearchWarehouses(Filter: SearchWarehousesInput!): [Warehouse!]!
+}
+
+type UserQuery {
+    GetUser(User: GetUserInput!): User!
+    SearchUsers(Filter: SearchUsersInput!): [User!]!
+}
+
+#Mutations
+type WarehouseMutation {
+    CreateWarehuse(Warehouse: CreateWarehouseInput!): Warehouse!
+    UpdateWarehuse(Warehouse: UpdateWarehouseInput!): Warehouse!
+}
+
+type ItemMutation {
+    CreateItem(Item: CreateItemInput!): Item!
+    UpdateItem(Item: UpdateItemInput!): Item!
+}
+
+type UserMutation {
+    CreateUser(User: CreateUserInput!): User!
+    UpdateUser(User: UpdateUserInput!): User!
+}
+
+#Root schema
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  Item: ItemQuery
+  Warehouse: WarehouseQuery
+  User: UserQuery
+}
+
+type Mutation {
+  Item: ItemMutation
+  Warehouse: WarehouseMutation
+  User: UserMutation
+}

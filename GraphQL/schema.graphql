@@ -1,0 +1,396 @@
+enum LogoutReason {
+    UNDEFINED
+    USER_LOGOUT
+    SESSION_TIMEOUT
+    TOKEN_EXPIRED
+    FORCE_LOGOUT         
+    DEVICE_DISCONNECTED 
+    SECURITY_EVENT
+}
+
+type User {
+    Entry: Int!
+    Code: String!
+    Name: String
+    Email: String
+    Phone: String
+    Employee: Int
+    SuperUser: Boolean!
+    IsLocked: Boolean!
+    IsActive: Boolean!
+    ChangePasswordNextLogin: Boolean!
+    PasswordNeverExpires: Boolean!
+    CreatedBy: Int!
+    CreateDate: String!
+    LastUpdatedBy: Int
+    UpdateDate: String
+}
+
+type AuthPayLoad {
+    AccessToken: String!
+    User: User!
+}
+
+type LogoutPayload {
+    SessionUUID: String!
+    StartDate: String!
+    EndDate: String!
+    Duration: Int!
+    Reason: LogoutReason!
+    Message: String
+}
+
+type Item {
+    Entry: Int!
+    Code: String!
+    Name: String!
+    Description: String
+    Image: String
+    IsActive: Boolean!
+    PurchaseItem: Boolean!
+    SellItem: Boolean!
+    InventoryItem: Boolean!
+    Price: Float!
+    Brand: ItemBrand
+    Group: ItemGroup
+    OnHand: Float!
+    OnOrder: Float
+    OnRequest: Float
+    MinStock: Float
+    MaxStock: Float
+    MinOrder: Float
+    MaxOrder: Float
+    MinRequest: Float
+    MaxRequest: Float
+    CreatedBy: User!
+    CreateDate: String!
+    LastUpdatedBy: User
+    UpdateDate: String
+}
+
+type ItemGroup {
+    Entry: Int!
+    Code: String!
+    Name: String!
+    CreatedBy: User!
+    CreateDate: String!
+    LastUpdatedBy: User
+    UpdateDate: String
+}
+
+type ItemBrand {
+    Entry: Int!
+    Code: String!
+    Name: String!
+    CreatedBy: User!
+    CreateDate: String!
+    LastUpdatedBy: User
+    UpdateDate: String
+}
+
+input CreateUserInput {
+    Code: String!
+    Name: String
+    Email: String
+    Phone: String
+    Employee: Int
+    Password: String!
+    SuperUser: Boolean!
+    ChangePasswordNextLogin: Boolean!
+    PasswordNeverExpires: Boolean!
+    CreatedBy: Int!
+    CreateDate: String!
+}
+
+input CreateItemInput {
+    Code: String!
+    Name: String!
+    Description: String
+    Image: String
+    IsActive: Boolean
+    PurchaseItem: Boolean
+    SellItem: Boolean
+    InventoryItem: Boolean
+    Price: Float!
+    Brand: Int
+    Group: Int
+    MinStock: Float
+    MaxStock: Float
+    MinOrder: Float
+    MaxOrder: Float
+    MinRequest: Float
+    MaxRequest: Float
+    CreatedBy: Int!
+    CreateDate: String!
+}
+
+input CreateItemBrandInput {
+    Code: String!
+    Name: String!
+    CreatedBy: Int!
+    CreateDate: String!
+}
+
+input CreateItemGroupInput {
+    Code: String!
+    Name: String!
+    CreatedBy: Int!
+    CreateDate: String!
+}
+
+input UpdateUserFilter {
+    Entry: Int!
+    Code: String!
+}
+
+input UpdateUserDataInput {
+    Name: String!
+    Email: String!
+    Phone: String!
+    Employee: Int!
+}
+
+input UpdateUserInput {
+    Where: UpdateUserFilter!
+    Data: UpdateUserDataInput!
+    UpdateDate: String!
+    UpdatedBy: Int!
+}
+
+input UpdateItemInput {
+    Code: String!
+    Name: String
+    Description: String
+    Image: String
+    IsActive: Boolean
+    PurchaseItem: Boolean
+    SellItem: Boolean
+    InventoryItem: Boolean
+    Price: Float
+    Brand: Int
+    Group: Int
+    MinStock: Float
+    MaxStock: Float
+    MinOrder: Float
+    MaxOrder: Float
+    MinRequest: Float
+    MaxRequest: Float
+    LastUpdatedBy: Int!
+    UpdateDate: String!
+}
+
+input UpdateItemBrandInput {
+    Code: String!
+    Name: String!
+    LastUpdatedBy: Int!
+    UpdateDate: String!
+}
+
+input GetUserInput {
+    Entry: Int
+    Code: String
+    Name: String
+    Email: String
+    Phone: String
+    Employee: Int
+}
+
+input GetItemInput {
+    Entry: Int
+    Code: String
+    Name: String
+}
+
+input GetItemGroupInput {
+    Code: String
+    Name: String
+}
+
+input GetItemBrandInput {
+    Code: String
+    Name: String
+}
+
+input SearchUsersInput {
+    #AND: [SearchUsersInput]
+    #OR: [SearchUsersInput]
+    AllOff: Boolean!
+    AnyOff: Boolean!
+    CodeEqualsTo: String
+    CodeContains: String
+    NameEqualsTo: String
+    NameConatins: String
+    EmailEqualsTo: String
+    EmailContains: String
+    PhoneEqualsTo: String
+    PhoneContains: String
+    InactiveUsers: Boolean
+    LockedUsers: Boolean
+    HasEmployee: Boolean
+}
+
+input SearchItemsInput {
+    #AND: [SearchItemsInput]
+    #OR: [SearchItemsInput]
+    CodeEqualsTo: String
+    CodeContains: String
+    NameEqualsTo: String
+    NameContains: String
+    DescriptionEqualsTo: String
+    DescriptionContains: String
+    IsActive: Boolean
+    PurchaseItem: Boolean
+    SellItem: Boolean
+    InventoryItem: Boolean
+    Price: Float
+    OnHandEqualsTo: Float
+    OnHandGreaterThan: Float
+    OnHandLessThan: Float
+    OnRequestEqualsTo: Float
+    OnRequestGreaterThan: Float
+    OnRequestLessThan: Float
+    OnOrderEqualsTo: Float
+    OnOrderGreaterThan: Float
+    OnOrderLessThan: Float
+    MinStockEqualsTo: Float
+    MinStockGreaterThan: Float
+    MinStockLessThan: Float
+    MaxStockEqualsTo: Float
+    MaxStockGreaterThan: Float
+    MaxStockLessThan: Float
+    MinOrderEqualsTo: Float
+    MinOrderGreaterThan: Float
+    MinOrderLessThan: Float
+    MaxOrderEqualsTo: Float
+    MaxOrderGreaterThan: Float
+    MaxOrderLessThan: Float
+    MinRequestEqualsTo: Float
+    MinRequestGreaterThan: Float
+    MinRequestLessThan: Float
+    MaxReqeuestEqualsTo: Float
+    MaxRequestGreaterThan: Float
+    MaxRequestLessThan: Float
+}
+
+input SearchItemGroupsInput {
+    NameEqualsTo: String
+    NameContains: String
+}
+
+input SearchItemBrandsInput {
+    NameEqualsTo: String
+    NameContains: String
+}
+
+input ChangePasswordInput {
+    Entry: Int
+    Code: String
+    OldPassword: String!
+    NewPassword: String!
+    UpdateDate: String!
+    UpdatedBy: Int!
+}
+
+input UpdateUserPoliciesInput {
+    Entry: Int!
+    Code: String!
+    IsActive: Boolean!
+    IsLocked: Boolean!
+    SuperUser: Boolean!
+    ChangePasswordNextLogin: Boolean!
+    PasswordNeverExpires: Boolean!
+    UpdateDate: String!
+    UpdatedBy: Int!
+}
+
+input UpdateItemGroupInput {
+    Code: String!
+    Name: String!
+    LastUpdatedBy: Int!
+    UpdateDate: String!
+}
+
+input SessionParams {
+    Code: String
+    Email: String
+    Phone: String
+    StartDate: String!
+    DeviceIP: String!
+    HostName: String!
+    Password: String!
+}
+
+input LogoutParams {
+    SessionUUID: String!
+    EndDate: String!
+    Reason: LogoutReason!
+    Message: String
+}
+
+type UserQuery {
+    GetUser(Filter: GetUserInput!): User!
+    SearchUsers(Filter: SearchUsersInput!): [User!]!
+}
+
+type ItemQuery {
+    GetItem(Item: GetItemInput!): Item!
+    GetAllItems: [Item!]!
+    SearchItems(Filter: SearchItemsInput!): [Item!]!
+}
+
+type ItemGroupQuery {
+    GetItemGroup(ItemGroup: GetItemGroupInput!): ItemGroup!
+    GetAllItemGroups: [ItemGroup!]!
+}
+
+type ItemBrandQuery {
+    GetItemBrand(ItemBrand: GetItemBrandInput!): ItemBrand!
+    GetAllItemBrands: [ItemBrand!]!
+}
+
+type UserMutation {
+    CreateUser(User: CreateUserInput!): User!
+    UpdateUser(User: UpdateUserInput!): User!
+    ChangePassword(User: ChangePasswordInput!): Boolean!
+    UpdateUserPolicies(Policies: UpdateUserPoliciesInput!): Boolean!
+}
+
+type SessionMutation {
+    Login(Data: SessionParams!): AuthPayLoad!
+    Logout(Data: LogoutParams!): LogoutPayload!
+}
+
+type ItemMutation {
+    CreateItem(Item: CreateItemInput!): Item!
+    UpdateItem(Item: UpdateItemInput!): Item!
+}
+
+type ItemGroupMutation {
+    CreateItemGroup(ItemGroup: CreateItemGroupInput!): ItemGroup!
+    UpdateItemGroup(ItemGroup: UpdateItemGroupInput!): ItemGroup!
+}
+
+type ItemBrandMutation {
+    CreateItemBrand(ItemBrand: CreateItemBrandInput!): ItemBrand!
+    UpdateItemBrand(ItemBrand: UpdateItemBrandInput!): ItemBrand!
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  User: UserQuery
+  Item: ItemQuery
+  ItemGroup: ItemGroupQuery
+  ItemBrand: ItemBrandQuery
+}
+
+type Mutation {
+  User: UserMutation
+  Session: SessionMutation
+  Item: ItemMutation
+  ItemGroup: ItemGroupMutation
+  ItemBrand: ItemBrandMutation
+}
