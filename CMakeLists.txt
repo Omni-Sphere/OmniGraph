@@ -12,11 +12,20 @@ if(NOT ODBC_LIBRARY)
 endif()
 
 find_package(Boost REQUIRED COMPONENTS thread)
+
+if(NOT Boost_FOUND)
+    message(FATAL_ERROR "Boost not found")
+endif()
+
 find_library(BOOST_JSON_LIB boost_json)
 if(NOT BOOST_JSON_LIB)
     message(WARNING "Boost.JSON library not found, assuming header-only")
     set(BOOST_JSON_LIB "")
 endif()
+
+message(STATUS "Boost version: ${Boost_VERSION}")
+message(STATUS "Boost include dirs: ${Boost_INCLUDE_DIRS}")
+message(STATUS "Boost libraries: ${Boost_LIBRARIES}")
 
 find_library(SODIUM_LIB sodium REQUIRED)
 if(NOT SODIUM_LIB)
