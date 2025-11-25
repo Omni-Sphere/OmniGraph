@@ -3,7 +3,7 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}",                
+                "${workspaceFolder}",
                 "${workspaceFolder}/GraphQL",
                 "${workspaceFolder}/GraphQL/Generated",
                 "${workspaceFolder}/OmniUtils",
@@ -13,7 +13,6 @@
                 "${workspaceFolder}/OmniCore/Item",
                 "${workspaceFolder}/OmniCore/ItemGroup",
                 "${workspaceFolder}/OmniCore/ItemBrand"
-
             ],
             "defines": [],
             "macFrameworkPath": [

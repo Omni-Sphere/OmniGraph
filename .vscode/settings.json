@@ -120,5 +120,6 @@
         "hash_set": "cpp",
         "unordered_set": "cpp",
         "*.cpp_": "cpp"
-    }
+    },
+    "C_Cpp.default.compilerPath": "/usr/bin/clang"
 }
