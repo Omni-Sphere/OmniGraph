@@ -237,9 +237,8 @@ void CDNServer::loadConfiguration() {
       }
     }
   } catch (const std::exception &e) {
-    Logger::Log("Failed to load CDN configuration: " + std::string(e.what()) +
-                    ". Using defaults.",
-                LogType::ERROR);
+    std::cerr << "[ERROR] Failed to load CDN configuration: " << e.what()
+              << ". Using defaults.\n";
   }
 
   if (!std::filesystem::exists(imgStoragePath))

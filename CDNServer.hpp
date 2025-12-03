@@ -11,14 +11,12 @@
 
 #include "Database.hpp"
 #include "GlobalConfiguration.hpp"
-#include "Logger.hpp"
 
 namespace beast = boost::beast;
 namespace http = beast::http;
 namespace net = boost::asio;
 
 using tcp = boost::asio::ip::tcp;
-using namespace omnicore::utils;
 
 class CDNServer {
 public:

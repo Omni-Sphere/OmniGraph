@@ -65,16 +65,6 @@ void HTTPServer::start_http_server(unsigned short port) {
             }
           }
 
-          Logger::LogRequest(traceId, remote_ip,
-                             std::string(req.method_string()),
-                             std::string(req.target()), headersJson, bodyStr);
-          Logger::Log("New connection from: " + remote_ip +
-                          " [TraceID: " + traceId + "]",
-                      LogType::INFO);
-          Logger::Log("Method: " + std::string(req.method_string()),
-                      LogType::DEBUG);
-          Logger::Log("Target: " + std::string(req.target()), LogType::DEBUG);
-
           std::string target = std::string(req.target());
           if (target.starts_with("/cdn/upload/")) {
             if (self->cdnServer) {
@@ -106,9 +96,7 @@ void HTTPServer::start_http_server(unsigned short port) {
           }
 
           if (req.method() != http::verb::post) {
-            Logger::Log("Method not allowed: " +
-                            std::string(req.method_string()),
-                        LogType::WARNING);
+
             http::response<http::string_body> res{
                 http::status::method_not_allowed, req.version()};
             res.set(http::field::content_type, "text/plain");
@@ -120,9 +108,7 @@ void HTTPServer::start_http_server(unsigned short port) {
           }
 
           if (req[http::field::content_type] != "application/json") {
-            Logger::Log("Unsupported Content-Type: " +
-                            std::string(req[http::field::content_type]),
-                        LogType::WARNING);
+
             http::response<http::string_body> res{
                 http::status::unsupported_media_type, req.version()};
             res.set(http::field::content_type, "text/plain");
@@ -157,21 +143,19 @@ void HTTPServer::start_websocket_server(unsigned short port) {
 
   *do_accept = [acceptor, &ioc = this->ioc, do_accept]() {
     auto socket = std::make_shared<tcp::socket>(ioc);
-    acceptor->async_accept(*socket, [socket, &ioc,
-                                     do_accept](boost::system::error_code ec) {
-      if (!ec) {
-        net::post(ioc, [socket]() {
-          try {
-            Logger::Log("Web socket server iniciado", LogType::INFO);
-          } catch (const std::exception &e) {
-            Logger::Log("[WebSocket Session Error] " + std::string(e.what()),
-                        LogType::ERROR);
+    acceptor->async_accept(
+        *socket, [socket, &ioc, do_accept](boost::system::error_code ec) {
+          if (!ec) {
+            net::post(ioc, [socket]() {
+              try {
+              } catch (const std::exception &e) {
+                // WebSocket session error handling
+              }
+            });
           }
-        });
-      }
 
-      (*do_accept)();
-    });
+          (*do_accept)();
+        });
   };
 
   (*do_accept)();

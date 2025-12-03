@@ -15,7 +15,6 @@
 #include "Database.hpp"
 #include "GlobalConfiguration.hpp"
 #include "GraphQLEngine.hpp"
-#include "Logger.hpp"
 #include "UUIDv4.hpp"
 
 namespace beast = boost::beast;
@@ -26,7 +25,6 @@ namespace net = boost::asio;
 namespace json = boost::json;
 
 using tcp = boost::asio::ip::tcp;
-using namespace omnicore::utils;
 
 class HTTPServer : public std::enable_shared_from_this<HTTPServer> {
 public:
