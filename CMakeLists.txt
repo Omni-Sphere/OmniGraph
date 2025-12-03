@@ -60,6 +60,7 @@ add_executable(OmniGraph
         ${GRAPHQL_RESOLVERS_SOURCES}
         ${CMAKE_CURRENT_SOURCE_DIR}/GraphQLEngine.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/HTTPServer.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/CDNServer.cpp
         ${PROJECT_SOURCES}
 )
 
