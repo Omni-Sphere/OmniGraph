@@ -375,6 +375,106 @@ type ItemBrandMutation {
     UpdateItemBrand(ItemBrand: UpdateItemBrandInput!): ItemBrand!
 }
 
+type Calendar {
+    Entry: Int!
+    Code: String!
+    Title: String!
+    Description: String
+    CreatedBy: User!
+    CreateDate: String!
+    LastUpdatedBy: User
+    UpdateDate: String
+}
+
+type CalendarEvent {
+    Entry: Int!
+    Calendar: Calendar!
+    Title: String!
+    Description: String
+    AssignedTo: User
+    StartDate: String!
+    EndDate: String!
+    AllDay: Boolean!
+    CreatedBy: User!
+    CreateDate: String!
+    LastUpdatedBy: User
+    UpdateDate: String
+}
+
+input CreateCalendarInput {
+    Code: String!
+    Title: String!
+    Description: String
+    CreatedBy: Int!
+    CreateDate: String!
+}
+
+input UpdateCalendarInput {
+    Code: String!
+    Title: String
+    Description: String
+    LastUpdatedBy: Int!
+    UpdateDate: String!
+}
+
+input GetCalendarInput {
+    Entry: Int
+    Code: String
+}
+
+input SearchCalendarsInput {
+    TitleContains: String
+}
+
+input CreateCalendarEventInput {
+    Calendar: Int!
+    Title: String!
+    Description: String
+    AssignedTo: Int
+    StartDate: String!
+    EndDate: String!
+    AllDay: Boolean!
+    CreatedBy: Int!
+    CreateDate: String!
+}
+
+input UpdateCalendarEventInput {
+    Entry: Int!
+    Title: String
+    Description: String
+    AssignedTo: Int
+    StartDate: String
+    EndDate: String
+    AllDay: Boolean
+    LastUpdatedBy: Int!
+    UpdateDate: String!
+}
+
+input GetCalendarEventInput {
+    Entry: Int
+}
+
+input SearchCalendarEventsInput {
+    Calendar: Int
+    AssignedTo: Int
+    StartDateGreaterThan: String
+    EndDateLessThan: String
+}
+
+type CalendarQuery {
+    GetCalendar(Calendar: GetCalendarInput!): Calendar!
+    SearchCalendars(Filter: SearchCalendarsInput!): [Calendar!]!
+    GetCalendarEvent(Event: GetCalendarEventInput!): CalendarEvent!
+    SearchCalendarEvents(Filter: SearchCalendarEventsInput!): [CalendarEvent!]!
+}
+
+type CalendarMutation {
+    CreateCalendar(Calendar: CreateCalendarInput!): Calendar!
+    UpdateCalendar(Calendar: UpdateCalendarInput!): Calendar!
+    CreateCalendarEvent(Event: CreateCalendarEventInput!): CalendarEvent!
+    UpdateCalendarEvent(Event: UpdateCalendarEventInput!): CalendarEvent!
+}
+
 schema {
   query: Query
   mutation: Mutation
@@ -385,6 +485,7 @@ type Query {
   Item: ItemQuery
   ItemGroup: ItemGroupQuery
   ItemBrand: ItemBrandQuery
+  Calendar: CalendarQuery
 }
 
 type Mutation {
@@ -393,4 +494,5 @@ type Mutation {
   Item: ItemMutation
   ItemGroup: ItemGroupMutation
   ItemBrand: ItemBrandMutation
+  Calendar: CalendarMutation
 }

@@ -34,10 +34,11 @@ endif()
 
 find_package(Threads REQUIRED)
 
-set(CPPGRAPHQLGEN_LIB_DIR /usr/local/lib)
-set(GRAPHQLRESPONSE_LIB ${CPPGRAPHQLGEN_LIB_DIR}/libgraphqlresponse.a)
-set(GRAPHQLPEG_LIB      ${CPPGRAPHQLGEN_LIB_DIR}/libgraphqlpeg.a)
-set(GRAPHQLSERVICE_LIB  ${CPPGRAPHQLGEN_LIB_DIR}/libgraphqlservice.a)
+find_library(GRAPHQLRESPONSE_LIB NAMES graphqlresponse REQUIRED)
+find_library(GRAPHQLPEG_LIB NAMES graphqlpeg REQUIRED)
+find_library(GRAPHQLSERVICE_LIB NAMES graphqlservice REQUIRED)
+
+find_path(GRAPHQL_INCLUDE_DIR NAMES graphqlservice/GraphQLService.h REQUIRED)
 
 set(GRAPHQL_GENERATED_DIR ${CMAKE_CURRENT_SOURCE_DIR}/GraphQL/Generated)
 set(GRAPHQL_RESOLVERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/GraphQL/Resolvers)
@@ -64,22 +65,25 @@ add_executable(OmniGraph
         ${PROJECT_SOURCES}
 )
 
-target_include_directories(OmniGraph PRIVATE
+    target_include_directories(OmniGraph PRIVATE
         ${Boost_INCLUDE_DIRS}
+        ${GRAPHQL_INCLUDE_DIR}
         ${GRAPHQL_DIR}
         ${GRAPHQL_GENERATED_DIR}
         ${GRAPHQL_RESOLVERS_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/Base
-        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/User
-        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/Session
-        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/Database
-        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/Item
-        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/ItemGroup
-        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/ItemBrand
-        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/GlobalConfiguration
-        ${CMAKE_CURRENT_SOURCE_DIR}/OmniUtils
-)
+        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/Include
+        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/Include/OmniCore/Base
+        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/Include/OmniCore/User
+        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/Include/OmniCore/Session
+        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/Include/OmniCore/Database
+        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/Include/OmniCore/Item
+        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/Include/OmniCore/ItemGroup
+        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/Include/OmniCore/ItemBrand
+        ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/Include/OmniCore/GlobalConfiguration
+        ${CMAKE_CURRENT_SOURCE_DIR}/OmniUtils/Include
+        ${CMAKE_CURRENT_SOURCE_DIR}/OmniUtils/Include/OmniUtils
+    )
 
 if(APPLE)
     target_link_libraries(OmniGraph PRIVATE
@@ -105,7 +109,7 @@ else()
             ${GRAPHQLPEG_LIB}
             ${GRAPHQLRESPONSE_LIB}
             ${GRAPHQLSERVICE_LIB}
-            ${CMAKE_CURRENT_SOURCE_DIR}/libOmniCore.so
-            ${CMAKE_CURRENT_SOURCE_DIR}/libOmniUtils.so
+            ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/Libs/libOmniCore.dll.a
+            ${CMAKE_CURRENT_SOURCE_DIR}/OmniUtils/Libs/libOmniUtils.dll.a
     )
 endif()
