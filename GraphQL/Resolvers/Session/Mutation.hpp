@@ -12,24 +12,24 @@
 #include "Models/AuthPayload.hpp"
 #include "DTOs/Login.hpp"
 #include "DTOs/Logout.hpp"
-#include "User.hpp"
-#include "Session.hpp"
+#include "User/User.hpp"
+#include "Session/Session.hpp"
 
 class SessionMutation 
 {
 private:
-    std::shared_ptr<omnicore::service::Session> m_session;
+    std::shared_ptr<omnisphere::omnicore::services::Session> m_session;
     
 
 public:
-    explicit SessionMutation(std::shared_ptr<omnicore::service::Session> _session) noexcept
+    explicit SessionMutation(std::shared_ptr<omnisphere::omnicore::services::Session> _session) noexcept
         : m_session(std::move(_session)) {}
 
     graphql::service::AwaitableObject<std::shared_ptr<graphql::omnisphere::object::AuthPayLoad>> getLogin(graphql::service::FieldParams &&params, const graphql::omnisphere::SessionParams &sessionParam) const
     {
         try
         {
-            omnicore::dto::Login login(
+            omnisphere::omnicore::dtos::Login login(
                 sessionParam.Code,
                 sessionParam.Email,
                 sessionParam.Phone,
@@ -39,8 +39,8 @@ public:
                 sessionParam.Password
             );
 
-            omnicore::model::AuthPayload authPayload = m_session->Login(login);
-            std::shared_ptr<AuthPayloadResolver> resolver = std::make_shared<AuthPayloadResolver>(std::make_shared<omnicore::model::AuthPayload>(authPayload));
+            omnisphere::omnicore::models::AuthPayload authPayload = m_session->Login(login);
+            std::shared_ptr<AuthPayloadResolver> resolver = std::make_shared<AuthPayloadResolver>(std::make_shared<omnisphere::omnicore::models::AuthPayload>(authPayload));
 
             co_return std::make_shared<graphql::omnisphere::object::AuthPayLoad>(resolver);
         }
@@ -56,14 +56,14 @@ public:
     {
         try
         {
-            omnicore::dto::Logout logout(
+            omnisphere::omnicore::dtos::Logout logout(
                 dto.SessionUUID,
                 dto.EndDate,
                 toLocalLogoutReason(dto.Reason),
                 dto.Message
             );
 
-            std::shared_ptr<omnicore::model::LogoutPayload> model = std::make_shared<omnicore::model::LogoutPayload>(m_session->Logout(logout));
+            std::shared_ptr<omnisphere::omnicore::models::LogoutPayload> model = std::make_shared<omnisphere::omnicore::models::LogoutPayload>(m_session->Logout(logout));
 
             std::shared_ptr<LogoutPayloadResolver> resolver = std::make_shared<LogoutPayloadResolver>(model);
 

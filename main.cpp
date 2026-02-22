@@ -1,21 +1,59 @@
-#include "CDNServer.hpp"
+#ifdef _WIN32
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#include <winsock2.h>
+
+#endif
+
+#include "Configuration.hpp"
 #include "Database.hpp"
 #include "GraphQLEngine.hpp"
 #include "HTTPServer.hpp"
 
+
 int main() {
-  Base64::SetSecret("_.:Development:._");
-  JWT::SetJWTSecret("_.::JWT_Development:._");
+  omnisphere::utils::Base64::SetSecret("_.:Development:._");
+
+  if (!Configuration::Exists("Config.json")) {
+    DatabaseConfig dbConfig;
+    dbConfig.Server = "127.0.0.1";
+    dbConfig.User = "sa";
+    dbConfig.Password = "Development..";
+    dbConfig.DatabaseName = "OmniDB";
+    dbConfig.TrustCertificate = true;
+    Configuration::SetDatabaseConfig(dbConfig);
+
+    LicenseConfig licConfig;
+    licConfig.Token = "DevelopmentToken";
+    licConfig.Secret =
+        "_.::JWT_Development_Secret_Must_Be_32_Chars_Long::._"; // Need 32+
+                                                                // chars
+    Configuration::SetLicenseConfig(licConfig);
+
+    Configuration::Save("Config.json");
+    std::cerr << "[INFO] Created default Config.json. Please configure it and "
+                 "restart.\n";
+    return 0;
+  }
+
+  Configuration::Load("Config.json");
+  auto dbConfig = Configuration::GetDatabaseConfig();
+  auto licConfig = Configuration::GetLicenseConfig();
+
+  omnisphere::utils::JWT::SetJWTSecret(licConfig.Secret);
 
   net::io_context ioc;
 
-  std::shared_ptr<omnicore::service::Database> database =
-      std::make_shared<omnicore::service::Database>();
-  database->ServerName("192.168.1.253");
-  database->UserName("sa");
-  database->Password("Development..");
-  database->DatabaseName("OmniDB");
-  database->TrustServerCertificate(true);
+  std::shared_ptr<omnisphere::omnidata::services::Database> database =
+      std::make_shared<omnisphere::omnidata::services::Database>();
+
+  database->ServerName(dbConfig.Server);
+  database->UserName(dbConfig.User);
+  database->Password(dbConfig.Password);
+  database->DatabaseName(dbConfig.DatabaseName);
+  database->TrustServerCertificate(dbConfig.TrustCertificate);
 
   if (!database->Connect()) {
     std::cerr << "[ERROR] No se pudo conectar a la base de datos. Se intentará "
@@ -37,15 +75,11 @@ int main() {
   std::shared_ptr<GraphQLEngine> graphqlEngine =
       std::make_shared<GraphQLEngine>(database);
 
-  auto cdnServer = std::make_shared<CDNServer>();
-  cdnServer->setDatabase(database);
-  cdnServer->loadConfiguration();
-
-  auto server = std::make_shared<HTTPServer>(ioc);
-  server->setGraphQLEngine(graphqlEngine);
-  server->setDatabase(database);
-  server->setCDNServer(cdnServer);
-  server->start(8081, 8082);
+  auto httpEndpoint = tcp::endpoint{tcp::v4(), 8081};
+  HTTPServer server(ioc, httpEndpoint);
+  server.setGraphQLEngine(graphqlEngine);
+  server.setDatabase(database);
+  server.run();
 
   std::vector<std::thread> threads;
   const int thread_count = std::thread::hardware_concurrency();

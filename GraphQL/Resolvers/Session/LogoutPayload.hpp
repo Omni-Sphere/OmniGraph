@@ -8,7 +8,7 @@
 class LogoutPayloadResolver
 {
 public:
-    explicit LogoutPayloadResolver(std::shared_ptr<omnicore::model::LogoutPayload> model)
+    explicit LogoutPayloadResolver(std::shared_ptr<omnisphere::omnicore::models::LogoutPayload> model)
         : m_model(std::move(model)) {};
 
     graphql::service::AwaitableScalar<std::string> getSessionUUID(graphql::service::FieldParams &&) const
@@ -45,5 +45,5 @@ public:
     void endSelectionSet(const graphql::service::SelectionSetParams &) const {}
 
 private:
-    std::shared_ptr<omnicore::model::LogoutPayload> m_model;
+    std::shared_ptr<omnisphere::omnicore::models::LogoutPayload> m_model;
 };

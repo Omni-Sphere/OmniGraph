@@ -5,7 +5,7 @@
 
 class UserResolver {
 public:
-    explicit UserResolver(std::shared_ptr<omnicore::model::User> model)
+    explicit UserResolver(std::shared_ptr<omnisphere::omnicore::models::User> model)
         : m_model(std::move(model))
     {}
 
@@ -73,5 +73,5 @@ public:
     void endSelectionSet(const graphql::service::SelectionSetParams&) const {}
 
 private:
-    std::shared_ptr<omnicore::model::User> m_model;
+    std::shared_ptr<omnisphere::omnicore::models::User> m_model;
 };

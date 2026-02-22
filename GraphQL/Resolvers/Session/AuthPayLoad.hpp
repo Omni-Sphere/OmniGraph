@@ -6,7 +6,7 @@
 
 class AuthPayloadResolver {
 public:
-    explicit AuthPayloadResolver(std::shared_ptr<omnicore::model::AuthPayload> model)
+    explicit AuthPayloadResolver(std::shared_ptr<omnisphere::omnicore::models::AuthPayload> model)
         : m_model(std::move(model)) {}
 
     graphql::service::AwaitableScalar<std::string> getAccessToken(graphql::service::FieldParams&&) const 
@@ -23,5 +23,5 @@ public:
     void endSelectionSet(const graphql::service::SelectionSetParams&) const {}
 
 private:
-    std::shared_ptr<omnicore::model::AuthPayload> m_model;
+    std::shared_ptr<omnisphere::omnicore::models::AuthPayload> m_model;
 };

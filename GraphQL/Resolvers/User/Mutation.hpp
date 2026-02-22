@@ -7,7 +7,7 @@
 #include <string>
 #include "Resolvers/User/Resolver.hpp"
 #include "Generated/UserMutationObject.h"
-#include "User.hpp"
+#include "User/User.hpp"
 #include "DTOs/CreateUser.hpp"
 #include "DTOs/ChangePassword.hpp"
 #include "Models/User.hpp"
@@ -16,10 +16,10 @@
 class UserMutation
 {
 private:
-    std::shared_ptr<omnicore::service::User> m_userService;
+    std::shared_ptr<omnisphere::omnicore::services::User> m_userService;
 
 public:
-    explicit UserMutation(std::shared_ptr<omnicore::service::User> user) noexcept
+    explicit UserMutation(std::shared_ptr<omnisphere::omnicore::services::User> user) noexcept
         : m_userService(std::move(user))
     {
     }
@@ -28,7 +28,7 @@ public:
     {
         try
         {
-            omnicore::dto::CreateUser newUser(
+            omnisphere::omnicore::dtos::CreateUser newUser(
                 _newUser.Code,
                 _newUser.Name,
                 _newUser.Email,
@@ -45,9 +45,9 @@ public:
             if(!m_userService->Add(newUser))
                 throw;
 
-            omnicore::model::User userModel = m_userService->Get(omnicore::enums::UserFilter::Code, newUser.Code);
+            omnisphere::omnicore::models::User userModel = m_userService->Get(omnisphere::omnicore::enums::UserFilter::Code, newUser.Code);
 
-            std::shared_ptr<UserResolver> resolver = std::make_shared<UserResolver>(std::make_shared<omnicore::model::User>(userModel));
+            std::shared_ptr<UserResolver> resolver = std::make_shared<UserResolver>(std::make_shared<omnisphere::omnicore::models::User>(userModel));
 
             co_return std::make_shared<graphql::omnisphere::object::User>(std::move(resolver));
         }
@@ -63,7 +63,7 @@ public:
     {
         try
         {
-            omnicore::dto::UpdateUser _user;
+            omnisphere::omnicore::dtos::UpdateUser _user;
 
             _user.Where.Entry = userChanges.Where.Entry;
             _user.Where.Code = userChanges.Where.Code;
@@ -73,9 +73,9 @@ public:
             _user.UpdateDate = userChanges.UpdateDate;
             _user.UpdatedBy = userChanges.UpdatedBy;
             
-            omnicore::model::User userModel = m_userService->Modify(_user);
+            omnisphere::omnicore::models::User userModel = m_userService->Modify(_user);
 
-            std::shared_ptr<UserResolver> resolver = std::make_shared<UserResolver>(std::make_shared<omnicore::model::User>(userModel));
+            std::shared_ptr<UserResolver> resolver = std::make_shared<UserResolver>(std::make_shared<omnisphere::omnicore::models::User>(userModel));
 
             co_return std::make_shared<graphql::omnisphere::object::User>(std::move(resolver));
         }
@@ -91,7 +91,7 @@ public:
     {
         try
         {   
-            omnicore::dto::ChangePassword _user(
+            omnisphere::omnicore::dtos::ChangePassword _user(
                 userParams.Entry,
                 userParams.Code,
                 userParams.OldPassword,

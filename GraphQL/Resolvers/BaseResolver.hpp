@@ -47,12 +47,12 @@ protected:
     graphql::service::AwaitableObject<std::shared_ptr<graphql::omnisphere::object::User>> ResolveUser(int entry) const
     {
         auto userModel = m_services->User->Get(
-            omnicore::enums::UserFilter::Entry,
+            omnisphere::omnicore::enums::UserFilter::Entry,
             std::to_string(entry)
         );
 
         auto resolver = std::make_shared<UserResolver>(
-            std::make_shared<omnicore::model::User>(userModel)
+            std::make_shared<omnisphere::omnicore::models::User>(userModel)
         );
 
         co_return std::make_shared<graphql::omnisphere::object::User>(resolver);

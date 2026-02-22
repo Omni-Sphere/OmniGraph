@@ -4,7 +4,7 @@
 #include "Generated/UserQueryObject.h"
 #include "Generated/UserObject.h"
 #include "Resolvers/User/Resolver.hpp"
-#include "User.hpp"
+#include "User/User.hpp"
 #include "Enums/UserFilter.hpp"
 
 #include <memory>
@@ -13,7 +13,7 @@
 class UserQuery
 {
 public:
-    explicit UserQuery(std::shared_ptr<omnicore::service::User> userService)
+    explicit UserQuery(std::shared_ptr<omnisphere::omnicore::services::User> userService)
         : m_userService(std::move(userService)) {}
 
     graphql::service::AwaitableObject<std::shared_ptr<graphql::omnisphere::object::User>> getGetUser(graphql::service::FieldParams &&params, const graphql::omnisphere::GetUserInput &userInput) const
@@ -22,20 +22,20 @@ public:
         {
             const int sentParams = userInput.Entry.has_value() + userInput.Code.has_value() + userInput.Name.has_value() + userInput.Email.has_value() + userInput.Phone.has_value() + userInput.Employee.has_value();
 
-            omnicore::model::User userModel;
+            omnisphere::omnicore::models::User userModel;
 
             if(userInput.Code.has_value())
-                userModel = m_userService->Get(omnicore::enums::UserFilter::Code, userInput.Code.value());
+                userModel = m_userService->Get(omnisphere::omnicore::enums::UserFilter::Code, userInput.Code.value());
 
             if(userInput.Name.has_value())
 
             if(userInput.Email.has_value())
-                userModel = m_userService->Get(omnicore::enums::UserFilter::Email, userInput.Email.value());
+                userModel = m_userService->Get(omnisphere::omnicore::enums::UserFilter::Email, userInput.Email.value());
 
             if(userInput.Employee.has_value())
-                userModel = m_userService->Get(omnicore::enums::UserFilter::Employee, std::to_string(userInput.Employee.value()));
+                userModel = m_userService->Get(omnisphere::omnicore::enums::UserFilter::Employee, std::to_string(userInput.Employee.value()));
 
-            std::shared_ptr<UserResolver> resolver = std::make_shared<UserResolver>(std::make_shared<omnicore::model::User>(userModel));
+            std::shared_ptr<UserResolver> resolver = std::make_shared<UserResolver>(std::make_shared<omnisphere::omnicore::models::User>(userModel));
 
             co_return std::make_shared<graphql::omnisphere::object::User>(std::move(resolver));
         }
@@ -54,13 +54,13 @@ public:
             
             std::vector<std::shared_ptr<graphql::omnisphere::object::User>> Users;
 
-            omnicore::dto::SearchUsers filter;
+            omnisphere::omnicore::dtos::SearchUsers filter;
 
-            std::vector<omnicore::model::User> model = m_userService->Search(filter);
+            std::vector<omnisphere::omnicore::models::User> model = m_userService->Search(filter);
 
-            for (const omnicore::model::User &user : model)
+            for (const omnisphere::omnicore::models::User &user : model)
             {
-                std::shared_ptr<UserResolver> resolver = std::make_shared<UserResolver>(std::make_shared<omnicore::model::User>(user));
+                std::shared_ptr<UserResolver> resolver = std::make_shared<UserResolver>(std::make_shared<omnisphere::omnicore::models::User>(user));
                 Users.emplace_back(std::make_shared<graphql::omnisphere::object::User>(std::move(resolver)));
             }
 
@@ -75,5 +75,5 @@ public:
     }
 
 private:
-    std::shared_ptr<omnicore::service::User> m_userService;
+    std::shared_ptr<omnisphere::omnicore::services::User> m_userService;
 };
