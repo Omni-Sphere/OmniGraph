@@ -100,9 +100,26 @@ if(APPLE)
             ${GRAPHQLPEG_LIB}
             ${GRAPHQLRESPONSE_LIB}
             ${GRAPHQLSERVICE_LIB}
-            ${CMAKE_CURRENT_SOURCE_DIR}/libOmniCore.dylib
-            ${CMAKE_CURRENT_SOURCE_DIR}/libOmniUtils.dylib
+            ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/libOmniCore.dylib
+            ${CMAKE_CURRENT_SOURCE_DIR}/OmniUtils/libOmniUtils.dylib
+            ${CMAKE_CURRENT_SOURCE_DIR}/OmniData/libOmniData.dylib
+            ${CMAKE_CURRENT_SOURCE_DIR}/OmniERP/libOmniERP.dylib
             iconv
+    )
+
+    add_custom_command(TARGET OmniGraph POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/libOmniCore.dylib"
+            "$<TARGET_FILE_DIR:OmniGraph>/"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_CURRENT_SOURCE_DIR}/OmniData/libOmniData.dylib"
+            "$<TARGET_FILE_DIR:OmniGraph>/"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_CURRENT_SOURCE_DIR}/OmniERP/libOmniERP.dylib"
+            "$<TARGET_FILE_DIR:OmniGraph>/"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_CURRENT_SOURCE_DIR}/OmniUtils/libOmniUtils.dylib"
+            "$<TARGET_FILE_DIR:OmniGraph>/"
     )
 else()
     target_link_options(OmniGraph PRIVATE "-fuse-ld=lld")
@@ -136,27 +153,22 @@ else()
     )
 
     add_custom_command(TARGET OmniGraph POST_BUILD
-        # Copy OmniCore DLLs
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/Libs/libOmniCore.dll"
+            "${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/libOmniCore.dll"
             "$<TARGET_FILE_DIR:OmniGraph>"
         
-        # Copy OmniData DLLs
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${CMAKE_CURRENT_SOURCE_DIR}/OmniData/Libs/libOmniData.dll"
+            "${CMAKE_CURRENT_SOURCE_DIR}/OmniData/libOmniData.dll"
             "$<TARGET_FILE_DIR:OmniGraph>"
 
-        # Copy OmniERP DLLs
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${CMAKE_CURRENT_SOURCE_DIR}/OmniERP/Libs/libOmniERP.dll"
+            "${CMAKE_CURRENT_SOURCE_DIR}/OmniERP/libOmniERP.dll"
             "$<TARGET_FILE_DIR:OmniGraph>"
 
-        # Copy OmniUtils DLLs
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${CMAKE_CURRENT_SOURCE_DIR}/OmniUtils/Libs/libOmniUtils.dll"
+            "${CMAKE_CURRENT_SOURCE_DIR}/OmniUtils/libOmniUtils.dll"
             "$<TARGET_FILE_DIR:OmniGraph>"
         
-        # Copy Dependencies (Boost, Sodium)
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${CMAKE_CURRENT_SOURCE_DIR}/OmniUtils/Libs/libboost_container-mt.dll"
             "$<TARGET_FILE_DIR:OmniGraph>"
