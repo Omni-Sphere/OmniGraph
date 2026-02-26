@@ -105,6 +105,8 @@ if(APPLE)
             ${CMAKE_CURRENT_SOURCE_DIR}/OmniData/libOmniData.dylib
             ${CMAKE_CURRENT_SOURCE_DIR}/OmniERP/libOmniERP.dylib
             iconv
+            OpenSSL::SSL
+            OpenSSL::Crypto
     )
 
     add_custom_command(TARGET OmniGraph POST_BUILD
@@ -122,7 +124,6 @@ if(APPLE)
             "$<TARGET_FILE_DIR:OmniGraph>/"
     )
 elseif(WIN32)
-    target_link_options(OmniGraph PRIVATE "-fuse-ld=lld")
     get_filename_component(GRAPHQL_LIB_DIR "${GRAPHQLPEG_LIB}" DIRECTORY)
     target_link_directories(OmniGraph PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/OmniCore"
@@ -183,7 +184,7 @@ elseif(WIN32)
         
         COMMENT "Copying DLLs to executable directory"
     )
-    elseif(UNIX)
+elseif(UNIX AND NOT APPLE)
     target_link_libraries(OmniGraph PRIVATE
             Threads::Threads
             ${ODBC_LIBRARY}
@@ -197,8 +198,10 @@ elseif(WIN32)
             ${CMAKE_CURRENT_SOURCE_DIR}/OmniUtils/libOmniUtils.so
             ${CMAKE_CURRENT_SOURCE_DIR}/OmniData/libOmniData.so
             ${CMAKE_CURRENT_SOURCE_DIR}/OmniERP/libOmniERP.so
-            iconv
+            OpenSSL::SSL
+            OpenSSL::Crypto
     )
+
     add_custom_command(TARGET OmniGraph POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/libOmniCore.so"
