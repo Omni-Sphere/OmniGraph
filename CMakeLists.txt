@@ -121,7 +121,7 @@ if(APPLE)
             "${CMAKE_CURRENT_SOURCE_DIR}/OmniUtils/libOmniUtils.dylib"
             "$<TARGET_FILE_DIR:OmniGraph>/"
     )
-else()
+elseif(WIN32)
     target_link_options(OmniGraph PRIVATE "-fuse-ld=lld")
     get_filename_component(GRAPHQL_LIB_DIR "${GRAPHQLPEG_LIB}" DIRECTORY)
     target_link_directories(OmniGraph PRIVATE
@@ -182,5 +182,35 @@ else()
             "$<TARGET_FILE_DIR:OmniGraph>"
         
         COMMENT "Copying DLLs to executable directory"
+    )
+    elseif(UNIX)
+    target_link_libraries(OmniGraph PRIVATE
+            Threads::Threads
+            ${ODBC_LIBRARY}
+            ${SODIUM_LIB}
+            ${Boost_LIBRARIES}
+            ${BOOST_JSON_LIB}
+            ${GRAPHQLPEG_LIB}
+            ${GRAPHQLRESPONSE_LIB}
+            ${GRAPHQLSERVICE_LIB}
+            ${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/libOmniCore.so
+            ${CMAKE_CURRENT_SOURCE_DIR}/OmniUtils/libOmniUtils.so
+            ${CMAKE_CURRENT_SOURCE_DIR}/OmniData/libOmniData.so
+            ${CMAKE_CURRENT_SOURCE_DIR}/OmniERP/libOmniERP.so
+            iconv
+    )
+    add_custom_command(TARGET OmniGraph POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/libOmniCore.so"
+            "$<TARGET_FILE_DIR:OmniGraph>/"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_CURRENT_SOURCE_DIR}/OmniData/libOmniData.so"
+            "$<TARGET_FILE_DIR:OmniGraph>/"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_CURRENT_SOURCE_DIR}/OmniERP/libOmniERP.so"
+            "$<TARGET_FILE_DIR:OmniGraph>/"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_CURRENT_SOURCE_DIR}/OmniUtils/libOmniUtils.so"
+            "$<TARGET_FILE_DIR:OmniGraph>/"
     )
 endif()
