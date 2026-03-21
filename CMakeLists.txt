@@ -218,16 +218,13 @@ elseif(UNIX AND NOT APPLE)
     )
 endif()
 
-# Installation Rules (Unix/Apple)
 if(UNIX OR APPLE)
     set(OMNI_INSTALL_LIB_DIR "/usr/local/lib/OmniSphere" CACHE PATH "Directory to install OmniGraph and libraries")
     
-    # Install the main executable
     install(TARGETS OmniGraph 
             RUNTIME DESTINATION bin
     )
 
-    # Install the shared libraries to the specified OmniSphere directory
     if(APPLE)
         install(FILES 
             "${CMAKE_CURRENT_SOURCE_DIR}/OmniCore/libOmniCore.dylib"

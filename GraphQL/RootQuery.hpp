@@ -7,10 +7,11 @@
 #include "Resolvers/Item/Query.hpp"
 #include "Resolvers/ItemGroup/Query.hpp"
 #include "Resolvers/ItemBrand/Query.hpp"
+#include "Resolvers/Floor/Query.hpp"
+#include "Resolvers/Area/Query.hpp"
 
 namespace graphql::resolvers
 {
-
     class RootQueryResolver
     {
     private:
@@ -44,6 +45,18 @@ namespace graphql::resolvers
         {
             std::shared_ptr<ItemBrandQuery> itemBrandQ = std::make_shared<ItemBrandQuery>(_services);
             co_return std::make_shared<graphql::omnisphere::object::ItemBrandQuery>(itemBrandQ);
+        }
+
+        graphql::service::AwaitableObject<std::shared_ptr<graphql::omnisphere::object::FloorQuery>> getFloor() const
+        {
+            std::shared_ptr<FloorQuery> floorQ = std::make_shared<FloorQuery>(_services);
+            co_return std::make_shared<graphql::omnisphere::object::FloorQuery>(floorQ);
+        }
+
+        graphql::service::AwaitableObject<std::shared_ptr<graphql::omnisphere::object::AreaQuery>> getArea() const
+        {
+            std::shared_ptr<AreaQuery> areaQ = std::make_shared<AreaQuery>(_services);
+            co_return std::make_shared<graphql::omnisphere::object::AreaQuery>(areaQ);
         }
 
         void beginSelectionSet(const graphql::service::SelectionSetParams &) const {}

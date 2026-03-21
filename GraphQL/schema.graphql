@@ -88,6 +88,30 @@ type ItemBrand {
     UpdateDate: String
 }
 
+type Floor {
+    Entry: Int!
+    Code: String!
+    Name: String!
+    Areas: [Area!]!
+    CreatedBy: User!
+    CreateDate: String!
+    LastUpdatedBy: User
+    UpdateDate: String
+}
+
+type Area {
+    Entry: Int!
+    Code: String!
+    Name: String!
+    Color: String
+    Capacity: Int
+    Floor: Int!
+    CreatedBy: User!
+    CreateDate: String!
+    LastUpdatedBy: User
+    UpdateDate: String
+}
+
 input CreateUserInput {
     Code: String!
     Name: String
@@ -209,6 +233,16 @@ input GetItemGroupInput {
 input GetItemBrandInput {
     Code: String
     Name: String
+}
+
+input GetFloorInput {
+    Entry: Int
+    Code: String
+}
+
+input GetAreaInput {
+    Entry: Int
+    Code: String
 }
 
 input SearchUsersInput {
@@ -348,6 +382,16 @@ type ItemBrandQuery {
     GetAllItemBrands: [ItemBrand!]!
 }
 
+type FloorQuery {
+    GetFloor(Floor: GetFloorInput!): Floor!
+    GetAllFloors: [Floor!]!
+}
+
+type AreaQuery {
+    GetArea(Area: GetAreaInput!): Area!
+    GetAllAreas: [Area!]!
+}
+
 type UserMutation {
     CreateUser(User: CreateUserInput!): User!
     UpdateUser(User: UpdateUserInput!): User!
@@ -485,6 +529,8 @@ type Query {
   Item: ItemQuery
   ItemGroup: ItemGroupQuery
   ItemBrand: ItemBrandQuery
+  Floor: FloorQuery
+  Area: AreaQuery
   Calendar: CalendarQuery
 }
 
